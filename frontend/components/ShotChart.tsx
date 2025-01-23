@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface Shot {
   loc_x: number; // X-coordinate of the shot (in feet, relative to court center)
   loc_y: number; // Y-coordinate of the shot (in feet, relative to court center)
-  shot_made_flag: boolean; // Whether the shot was made
+  shot_made_flag: number; // Whether the shot was made
 }
 
 interface ShotChartProps {
@@ -21,31 +21,8 @@ export function ShotChart({
 }: ShotChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Move origin to bottom center of the canvas instead of center
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    
-
-    // Draw the basketball court
-    drawCourt(ctx);
-
-    // Draw the shots on the court
-    drawShots(ctx, data);
-
-    // Reset transformation
-    ctx.resetTransform();
-  }, [data]);
-
-  function drawCourt(ctx: CanvasRenderingContext2D) {
+  // Memoize the drawCourt function
+  const drawCourt = useCallback((ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
@@ -124,19 +101,42 @@ export function ShotChart({
     }
 
     ctx.restore();
-  }
+  }, [color, lineWidth, outerLines]); // `drawCourt` is now memoized with `color` and `lineWidth` as dependencies
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Move origin to bottom center of the canvas instead of center
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    
+    // Draw the basketball court
+    drawCourt(ctx);
+
+    // Draw the shots on the court
+    drawShots(ctx, data);
+
+    // Reset transformation
+    ctx.resetTransform();
+  }, [data, drawCourt]); // Ensure `data` and `drawCourt` are included in the dependency array
 
   function drawShots(ctx: CanvasRenderingContext2D, data: Shot[]) {
     const scale = canvasRef.current!.width / 500;
-
 
     data.forEach(shot => {
       const x = shot.loc_x * scale;
       const y = shot.loc_y * scale - 210;
 
-      
+      const shotMade = shot.shot_made_flag === 1;
+
       // Fill the shot with the appropriate color
-      ctx.fillStyle = shot.shot_made_flag ? 'green' : 'red';
+      ctx.fillStyle = shotMade ? 'green' : 'red';
 
       ctx.beginPath();
       ctx.arc(x, y, 5, 0, 2 * Math.PI);

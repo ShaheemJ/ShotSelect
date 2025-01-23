@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import { ShotChart } from '@/components/ShotChart';
 import { PlayerStats } from '@/components/PlayerStats';
-import { getPlayerStats, getPlayerShotChart } from '@/utils/api';
 import Header from '@/components/Header';
 
+import { getPlayerStats, getPlayerShotChart, Player, ShotChartData } from '@/utils/api';
+
+
 export default function Home() {
-  const [playerStats, setPlayerStats] = useState<any>(null);
-  const [shotChartData, setShotChartData] = useState<any[]>([]);
+  const [playerStats, setPlayerStats] = useState<Player | null>(null);
+  const [shotChartData, setShotChartData] = useState<ShotChartData[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 

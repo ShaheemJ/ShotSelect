@@ -11,15 +11,40 @@ function buildQueryParams(params: Record<string, string | number | undefined>): 
 }
 
 // Define interfaces for type safety
-interface Player {
-  id: string;
-  name: string;
-  team: string;
-  position: string;
+export interface Player {
+  playerid: string;
+  player: string;
   age: number;
+  team: string;
+  pos: string;
+  g: number;
+  gs: number;
+  mp: number;
+  fg: number;
+  fga: number;
+  fg_percent: number;
+  threep: number;
+  threepa: number;
+  threep_percent: number;
+  twop: number;
+  twopa: number;
+  twop_percent: number;
+  efg_percent: number;
+  ft: number;
+  fta: number;
+  ft_percent: number;
+  orb: number;
+  drb: number;
+  trb: number;
+  ast: number;
+  stl: number;
+  blk: number;
+  tov: number;
+  pf: number;
+  pts: number;
 }
 
-interface ShotChartData {
+export interface ShotChartData {
   id: number;
   grid_type: string;
   game_id: number;
