@@ -16,7 +16,7 @@ export default function Header() {
             ShotSelect
           </h1>
         </div>
-        <Link href="https://github.com/yourusername/shotselect" target="_blank" rel="noopener noreferrer">
+        <Link href="https://github.com/ShaheemJ/shotselect" target="_blank" rel="noopener noreferrer">
           <div className="flex items-center gap-2">
             <span className="text-gray-700 hover:text-gray-900 font-inter font-bold transition-colors">GitHub Code ---&gt;</span>
             <Image
