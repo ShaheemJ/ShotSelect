@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/player")
+@CrossOrigin(origins = {"https://shot-select.vercel.app", "http://localhost:3000"})
 class PlayerController {
 
     private final PlayerService playerService;
