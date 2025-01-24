@@ -15,8 +15,6 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
 
   // Fetch all players on component mount
   useEffect(() => {
-    console.log('API Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
-
     const fetchPlayers = async () => {
       try {
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
