@@ -15,9 +15,18 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
 
   // Fetch all players on component mount
   useEffect(() => {
+    console.log('API Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
+
     const fetchPlayers = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/player');
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+        if (!API_BASE_URL) {
+          console.error('API_BASE_URL is not defined');
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/api/v1/player`);
         if (!response.ok) throw new Error('Failed to fetch players');
         const data: Player[] = await response.json();
 
