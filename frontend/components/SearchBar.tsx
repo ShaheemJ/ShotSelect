@@ -12,6 +12,7 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
   const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   // Fetch all players on component mount
   useEffect(() => {
@@ -21,6 +22,7 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
 
         if (!API_BASE_URL) {
           console.error('API_BASE_URL is not defined');
+          setLoading(false); // Stop loading if API_BASE_URL is not defined
           return;
         }
 
@@ -34,6 +36,8 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
         setFilteredPlayers(sortedPlayers); // Initialize filtered players
       } catch (error) {
         console.error('Error fetching players:', error);
+      } finally {
+        setLoading(false); // Stop loading after fetch is complete
       }
     };
 
@@ -62,33 +66,42 @@ export const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) =
 
   return (
     <div className="relative w-full max-w-md">
-      {/* Searchable input field */}
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        placeholder="Search for a player"
-        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      {/* Dropdown list */}
-      {filteredPlayers.length > 0 && (
-        <ul className="absolute z-10 w-full bg-white border rounded-lg shadow-md max-h-60 overflow-y-auto">
-          {filteredPlayers.map((player) => (
-            <li
-              key={player.playerid}
-              onClick={() => handlePlayerSelect(player.player)}
-              className="px-4 py-2 cursor-pointer hover:bg-blue-100"
-            >
-              {player.player}
-            </li>
-          ))}
-        </ul>
-      )}
-      {/* Hide the "No players found" message if a player is selected */}
-      {filteredPlayers.length === 0 && searchQuery && !selectedPlayer && (
-        <p className="absolute z-10 w-full px-4 py-2 bg-white border rounded-lg shadow-md">
-          No players found
+      {/* Show loading message if data is being fetched */}
+      {loading ? (
+        <p className="w-full px-4 py-2 text-center bg-gray-100 border rounded-lg shadow-sm">
+          Loading players...
         </p>
+      ) : (
+        <>
+          {/* Searchable input field */}
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search for a player"
+            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          {/* Dropdown list */}
+          {filteredPlayers.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border rounded-lg shadow-md max-h-60 overflow-y-auto">
+              {filteredPlayers.map((player) => (
+                <li
+                  key={player.playerid}
+                  onClick={() => handlePlayerSelect(player.player)}
+                  className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                >
+                  {player.player}
+                </li>
+              ))}
+            </ul>
+          )}
+          {/* Hide the "No players found" message if a player is selected */}
+          {filteredPlayers.length === 0 && searchQuery && !selectedPlayer && (
+            <p className="absolute z-10 w-full px-4 py-2 bg-white border rounded-lg shadow-md">
+              No players found
+            </p>
+          )}
+        </>
       )}
     </div>
   );
