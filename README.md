@@ -1,5 +1,7 @@
 # Shot Select - NBA Player Visualization Website
 
+![Shot Select Demo](ShotSelectDemo.png)
+
 An interactive platform for visualizing NBA player statistics and shot charts for the 2023-2024 season. Users can explore common player stats and visually analyze shooting performance with a clean and intuitive interface.
 
 ## Features
